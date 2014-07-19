@@ -32,7 +32,7 @@ public class BLEConnect extends Activity implements StateListener{
 	TextView mViewState;
 	CheckBox mExitService;
 	BLEservice mBLEservice;
-	Intent mIntent, mEcposedIntent;
+	Intent mIntent;
 	int mCachedState;
 	BroadcastReceiver mBtOnOffReceiver;
 	@Override
@@ -108,7 +108,6 @@ public class BLEConnect extends Activity implements StateListener{
 		unbindService(conn);
 		if ( mExitService.isChecked()) {
 			stopService(mIntent);
-			stopService(mEcposedIntent);
 		}
 		super.onStop();
 	}
@@ -133,11 +132,13 @@ public class BLEConnect extends Activity implements StateListener{
 	};
 
 	private void startConnectGatt() {
+		//FIXME: there is a bug in here.
 		Log.i(TAG,"startConnectGatt" + "mCachedState" + mCachedState);
 		if (ANCSGattCallback.BleDisconnect == mCachedState) {
 			mBLEservice.startBleConnect(addr, mAuto);
 			mBLEservice.registerStateChanged(this);
 		} else { // just display current state
+			
 			final String str = mBLEservice.getStateDes();
 			mViewState.setText(str);
 		}

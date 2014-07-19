@@ -21,11 +21,11 @@ public class ANCSGattCallback extends BluetoothGattCallback {
 	public static final int BleBuildDiscoverOver=4;		//discoverServices() ok
 	public static final int BleBuildSetingANCS=5;		//settingANCS	eg. need pwd...
 	public static final int BleBuildNotify=6; //notify arrive	
+	
 	private static final String TAG = "ANCSGattCallback";
 	
 	public int mBleState;
-	public static 
-	ANCSParser mANCSHandler;
+	public static ANCSParser mANCSHandler;
 	private BluetoothGatt mBluetoothGatt;
 	BluetoothGattService mANCSservice;
 	boolean mWritedNS,mWriteNS_DespOk;
@@ -135,6 +135,7 @@ public class ANCSGattCallback extends BluetoothGattCallback {
 
 		Log.i(TAG,"onConnectionStateChange"+ "newState" + newState + "status:" + status);
 		mBleState = newState;
+		//below code is necessary?
 		for (StateListener sl : mStateListeners) {
 			sl.onStateChanged(mBleState);
 		}
@@ -197,21 +198,7 @@ public class ANCSGattCallback extends BluetoothGattCallback {
 		mANCSHandler.setService(ancs, mBluetoothGatt);
 		ANCSParser.get().reset();
 		Log.i(TAG,"found ANCS service & set DS character,descriptor OK !");
-		/*
-		BluetoothGattCharacteristic cha = mANCSservice
-				.getCharacteristic(GattConstant.Apple.sUUIDChaNotify);
-		if (cha == null) {
-			Log.i(TAG,"can not find ANCS's NS cha");
-			return;
-		}
-		boolean registerNS = mBluetoothGatt.setCharacteristicNotification(
-				cha, true);
-		if (!registerNS) {
-			Log.i(TAG," Enable (NS) notifications failed  ");
-			return;
-		}
-		*/
-		Log.i(TAG,"enable NS notifications success");
+
 	}
 
 	@Override//the result of a descriptor write operation.

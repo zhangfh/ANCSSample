@@ -80,7 +80,6 @@ public class ANCSParser {
 			@Override
 			public void handleMessage(Message msg) {
 				int what = msg.what;
-				Log.i(TAG,"handleMessage");
 				if (MSG_CHECK_TIME == what) {
 					if (mCurData == null) {
 						return;
@@ -381,7 +380,8 @@ public class ANCSParser {
 		if (data == null || data.length != 8) {
 			Log.i(TAG,"bad ANCS notification data");
 			return;
-		}logD(data);
+		}
+		logD(data);
 		Message msg = mHandler.obtainMessage(MSG_ADD_NOTIFICATION);
 		msg.obj = data;
 		msg.sendToTarget();
