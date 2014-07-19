@@ -155,8 +155,13 @@ public class MainActivity extends ListActivity {
 			return;
 		}
 		*/
-		scan(true);
+		//scan(true);
 		getListView().setAdapter(mListAdapter);
+		//stop automatic scan , I try to list my iphone by mac address, but
+		//connect is success, but status is 133, keep it now.
+		BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice("E8:8D:28:E0:AC:51");
+		mList.add(device);
+		mListAdapter.notifyDataSetChanged();
 	}
 
 	
@@ -208,6 +213,5 @@ public class MainActivity extends ListActivity {
 		startActivity(intent);
 		finish();
 	}
-
 
 }

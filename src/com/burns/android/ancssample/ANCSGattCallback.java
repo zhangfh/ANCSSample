@@ -3,6 +3,7 @@ package com.burns.android.ancssample;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import android.app.NotificationManager;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -10,6 +11,7 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class ANCSGattCallback extends BluetoothGattCallback {
@@ -23,7 +25,8 @@ public class ANCSGattCallback extends BluetoothGattCallback {
 	public static final int BleBuildNotify=6; //notify arrive	
 	
 	private static final String TAG = "ANCSGattCallback";
-	
+	private Context mContext;
+	IOSNotification mnoti;
 	public int mBleState;
 	public static ANCSParser mANCSHandler;
 	private BluetoothGatt mBluetoothGatt;
@@ -36,6 +39,7 @@ public class ANCSGattCallback extends BluetoothGattCallback {
 	}
 	
 	public ANCSGattCallback(Context c,ANCSParser ancs){
+		mContext = c;
 		mANCSHandler = ancs;
 	}
 
@@ -133,7 +137,7 @@ public class ANCSGattCallback extends BluetoothGattCallback {
 	public void onConnectionStateChange(BluetoothGatt gatt, int status,
 			int newState) {
 
-		Log.i(TAG,"onConnectionStateChange"+ "newState" + newState + "status:" + status);
+		Log.i(TAG,"onConnectionStateChange"+ "newState " + newState + "status:" + status);
 		mBleState = newState;
 		//below code is necessary?
 		for (StateListener sl : mStateListeners) {
@@ -215,6 +219,7 @@ public class ANCSGattCallback extends BluetoothGattCallback {
 		}
 		if (status != BluetoothGatt.GATT_SUCCESS)
 			return;
+		//for some ble device, writedescriptor on sUUIDDataSource will return 133. fixme.
 		// status is 0, SUCCESS. 
 		if (mWritedNS && mWriteNS_DespOk) {
 			for (StateListener sl : mStateListeners) {
@@ -246,7 +251,17 @@ public class ANCSGattCallback extends BluetoothGattCallback {
 				Log.i(TAG,"null descriptor");
 			}
 		}
-		
+		//add a notification
+		mnoti=new  IOSNotification();
+		mnoti.title="ANCS_Server";
+		mnoti.message = "ANCS_run";
+		mnoti.uid=0;
+		NotificationCompat.Builder build = new NotificationCompat.Builder(mContext)
+		.setSmallIcon(R.drawable.ic_launcher)
+		.setContentTitle(mnoti.title)
+		.setContentText(mnoti.message);
+		((NotificationManager)mContext.getSystemService(Context.NOTIFICATION_SERVICE)).notify(mnoti.uid, build.build());
+		//
 	}
 
 }
