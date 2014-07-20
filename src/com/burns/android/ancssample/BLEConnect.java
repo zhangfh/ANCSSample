@@ -91,7 +91,9 @@ public class BLEConnect extends Activity implements StateListener{
 	}
 	@Override
 	public void onStart(){
+		
 		super.onStart();
+		Log.i(TAG,"onStart");
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);// bt on/off
 
@@ -100,10 +102,12 @@ public class BLEConnect extends Activity implements StateListener{
 	@Override
 	public void onResume(){
 		super.onResume();
+		Log.i(TAG,"onResume");
 		bindService(mIntent, conn, 1);
 	}
 	@Override
 	public void onStop() {
+		Log.i(TAG,"onStop");
 		unregisterReceiver(mBtOnOffReceiver);
 		unbindService(conn);
 		if ( mExitService.isChecked()) {
@@ -133,8 +137,14 @@ public class BLEConnect extends Activity implements StateListener{
 
 	private void startConnectGatt() {
 		//FIXME: there is a bug in here.
-		Log.i(TAG,"startConnectGatt" + "mCachedState" + mCachedState);
-		if (ANCSGattCallback.BleDisconnect == mCachedState) {
+		Log.i(TAG,"startConnectGatt " + "mCachedState:" + mCachedState + "getmBleANCS_state:" + mBLEservice.getmBleANCS_state());
+		if(mBLEservice.getmBleANCS_state() !=ANCSGattCallback.BleDisconnect)
+		{
+			final String str = mBLEservice.getStateDes();
+			mViewState.setText(str);
+		}
+		else if (ANCSGattCallback.BleDisconnect == mCachedState) {
+			Log.i(TAG, "connect ble");
 			mBLEservice.startBleConnect(addr, mAuto);
 			mBLEservice.registerStateChanged(this);
 		} else { // just display current state

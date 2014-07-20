@@ -157,8 +157,8 @@ public class MainActivity extends ListActivity {
 		*/
 		//scan(true);
 		getListView().setAdapter(mListAdapter);
-		//stop automatic scan , I try to list my iphone by mac address, but
-		//connect is success, but status is 133, keep it now.
+		//stop automatic scan , I try to list my iphone by mac address
+		//connect is success, but status is 133, keep the code temp.
 		BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice("E8:8D:28:E0:AC:51");
 		mList.add(device);
 		mListAdapter.notifyDataSetChanged();

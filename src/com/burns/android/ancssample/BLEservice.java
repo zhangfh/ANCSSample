@@ -87,7 +87,8 @@ public class BLEservice extends Service implements ANCSParser.onIOSNotification
 			addr = intent.getStringExtra("addr");
 		}
 		Log.i(TAG,"onStartCommand() flags="+flags+",stardId="+startId);
-		return startId;
+		return START_STICKY_COMPATIBILITY;
+		//return startId;
 	}
 
 	@Override
@@ -154,8 +155,13 @@ public class BLEservice extends Service implements ANCSParser.onIOSNotification
 		return mANCScb.getState();
 	}
 	
+	public int getmBleANCS_state() {
+		return mBleANCS_state;
+	}
+
 	@Override
 	public void onStateChanged(int state) {
 		mBleANCS_state = state;
 	}
+	
 }
